@@ -3,57 +3,53 @@
 RGBImageStudent::RGBImageStudent() : RGBImage() {
 	//int throwError = 0, e = 1 / throwError; //Throws error without the need to include a header
 	//TODO: Nothing
+	this->pixelStorage = nullptr;
 }
 
 RGBImageStudent::RGBImageStudent(const RGBImageStudent &other) : RGBImage(other.getWidth(), other.getHeight()) {
 	//int throwError = 0, e = 1 / throwError;
 	//TODO: Create a copy from the other object
-	int imageSize = other.getWidth() * other.getHeight();
-	for (int i = 0; i < imageSize; i++) {
-		pixelStorage.push_back(other.getPixel(i));
-	}
+	delete[] this->pixelStorage;
+	this->pixelStorage = new RGB[other.getWidth() * other.getHeight()];
+	this->pixelStorage = other.pixelStorage;
 }
 
 
 RGBImageStudent::RGBImageStudent(const int width, const int height) : RGBImage(width, height) {
 	//int throwError = 0, e = 1 / throwError;
 	//TODO: Initialize pixel storage
-	pixelStorage.resize(width*height);
+	delete[] this->pixelStorage;
+	this->pixelStorage = new RGB[width * height];
 }
 
 RGBImageStudent::~RGBImageStudent() {
 	//int throwError = 0, e = 1 / throwError;
 	//TODO: delete allocated objects
+	delete[] this->pixelStorage;
+	this->pixelStorage = nullptr;
 }
 
 void RGBImageStudent::set(const int width, const int height) {
 	RGBImage::set(width, height);
 	//int throwError = 0, e = 1 / throwError;
 	//TODO: resize or create a new pixel storage (Don't forget to delete the old storage)
-	pixelStorage.clear();
-	pixelStorage.resize(width*height);
+	delete[] this->pixelStorage;
+	this->pixelStorage = new RGB[width * height];
 }
 
 void RGBImageStudent::set(const RGBImageStudent &other) {
 	RGBImage::set(other.getWidth(), other.getHeight());
 	//int throwError = 0, e = 1 / throwError;
 	//TODO: resize or create a new pixel storage and copy the object (Don't forget to delete the old storage)
-	pixelStorage.clear();
-	int imageSize = other.getWidth() * other.getHeight();
-	pixelStorage.resize(imageSize);
-	for (int i = 0; i < imageSize; i++) {
-		pixelStorage.push_back(other.getPixel(i));
-	}
+	delete[] this->pixelStorage;
+	this->pixelStorage = new RGB[other.getWidth() * other.getHeight()];
+	this->pixelStorage = other.pixelStorage;
 }
 
 void RGBImageStudent::setPixel(int x, int y, RGB pixel) {
 	//int throwError = 0, e = 1 / throwError;
 	//TODO: no comment needed :)
-
-	int i = y * RGBImage::getWidth() + x;
-	//setPixel(i, pixel);
-	//pixelStorage[y * getWidth() + x] = pixel;
-	pixelStorage[i] = pixel;
+	*(this->pixelStorage + (y * RGBImage::getWidth() + x)) = pixel;
 }
 
 void RGBImageStudent::setPixel(int i, RGB pixel) {
@@ -79,21 +75,17 @@ void RGBImageStudent::setPixel(int i, RGB pixel) {
 	* 7		7
 	* 8		8
 	*/
-	pixelStorage[i] = pixel;
+	*(this->pixelStorage + i) = pixel;
 }
 
 RGB RGBImageStudent::getPixel(int x, int y) const {
 	//int throwError = 0, e = 1 / throwError;
 	//TODO: no comment needed :)
-
-	int i = y * RGBImage::getWidth() + x;
-	//return getPixel(i);
-	//return pixelStorage[y * getWidth() + x];
-	return pixelStorage[i];
+	return *(this->pixelStorage + (y * RGBImage::getWidth() + x));
 }
 
 RGB RGBImageStudent::getPixel(int i) const {
 	//int throwError = 0, e = 1 / throwError;
 	//TODO: see setPixel(int i, RGB pixel)
-	return pixelStorage[i];
+	return *(this->pixelStorage + i);
 }
